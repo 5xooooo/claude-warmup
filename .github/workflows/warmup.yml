@@ -16,10 +16,10 @@ jobs:
     steps:
       - name: Validate configuration
         env:
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_OAUTH_TOKEN }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_OAUTH_TOKEN || secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           if [ -z "${CLAUDE_CODE_OAUTH_TOKEN}" ]; then
-            echo "CLAUDE_OAUTH_TOKEN secret is not set."
+            echo "Neither CLAUDE_OAUTH_TOKEN nor CLAUDE_CODE_OAUTH_TOKEN secret is set."
             echo "Add it in Settings > Secrets and variables > Actions."
             exit 1
           fi
@@ -29,7 +29,7 @@ jobs:
 
       - name: Ping Claude to anchor 5-hour window
         env:
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_OAUTH_TOKEN }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_OAUTH_TOKEN || secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           mkdir -p ~/.claude
           echo '{"hasCompletedOnboarding":true}' > ~/.claude.json
@@ -48,7 +48,7 @@ jobs:
 
           if grep -Eiq "expired|unauthorized|invalid token|authentication|auth failed|login required|not logged in" "$output_file"; then
             echo "Claude token appears invalid or expired."
-            echo "Run 'claude setup-token' locally and update the CLAUDE_OAUTH_TOKEN GitHub secret."
+            echo "Run 'claude setup-token' locally and update the CLAUDE_OAUTH_TOKEN (or CLAUDE_CODE_OAUTH_TOKEN) GitHub secret."
             exit 1
           fi
 
