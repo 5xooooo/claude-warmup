@@ -70,6 +70,8 @@ Opens a browser for OAuth. Gives you a token starting with `sk-ant-oat01-...`, g
 gh secret set CLAUDE_OAUTH_TOKEN
 ```
 
+(`CLAUDE_CODE_OAUTH_TOKEN` also works for compatibility.)
+
 Paste when prompted.
 
 ### 4. Set your schedule
@@ -156,11 +158,11 @@ The workflow file is missing from your fork's default branch, or GitHub Actions 
 **`Must have admin rights to Repository`**
 You're probably dispatching against the upstream repo instead of your fork. Run `gh workflow run warmup.yml --repo <your-user>/claude-warmup` or set the default with `gh repo set-default <your-user>/claude-warmup`.
 
-**`CLAUDE_OAUTH_TOKEN secret is not set`**
-Add the secret in your fork under `Settings > Secrets and variables > Actions`, then rerun the workflow.
+**`Neither CLAUDE_OAUTH_TOKEN nor CLAUDE_CODE_OAUTH_TOKEN secret is set`**
+Add one of those secrets in your fork under `Settings > Secrets and variables > Actions`, then rerun the workflow.
 
 **`Claude token appears invalid or expired`**
-Run `claude setup-token` on a machine where you're logged into Claude Code, then update the `CLAUDE_OAUTH_TOKEN` secret in your fork and rerun the workflow. The warmup step checks for this directly.
+Run `claude setup-token` on a machine where you're logged into Claude Code, then update the `CLAUDE_OAUTH_TOKEN` (or `CLAUDE_CODE_OAUTH_TOKEN`) secret in your fork and rerun the workflow. The warmup step checks for this directly.
 
 **Unexpected Claude CLI failure**
 Check the workflow logs. The job now prints the full Claude CLI output and only treats explicit rate-limit responses as expected.
